@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Moon Pearl — a stealth game</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: #0a0c16; }
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: #dfe3f2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+  }
+  #hud {
+    width: 1280px;
+    max-width: 100vw;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 10px 14px;
+    background: #12142a;
+    border-bottom: 1px solid #2a2e4d;
+  }
+  #hud .title { font-size: 20px; letter-spacing: 2px; color: #e8b64c; white-space: nowrap; }
+  #hud .level { font-size: 13px; color: #9aa3c7; font-style: italic; white-space: nowrap; }
+  #hud-pearls { font-size: 15px; color: #cfe8ff; white-space: nowrap; }
+  #hud-alert {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px; font-weight: bold; letter-spacing: 1px;
+    padding: 4px 10px; border-radius: 10px; white-space: nowrap;
+  }
+  #hud-alert.calm { background: #1d3a24; color: #8fd6a0; }
+  #hud-alert.suspicious { background: #4d3d12; color: #ffd65a; }
+  #hud-alert.alarmed { background: #571512; color: #ff8a80; }
+  #hud-timer { font-family: Arial, Helvetica, sans-serif; font-size: 15px; color: #dfe3f2; }
+  #hud-hint { flex: 1; text-align: right; font-size: 13px; color: #ffd65a; font-style: italic; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  #stage { position: relative; width: 1280px; max-width: 100vw; }
+  canvas { display: block; width: 1280px; max-width: 100vw; height: auto; cursor: crosshair; }
+  #footer {
+    width: 1280px; max-width: 100vw;
+    padding: 8px 14px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 13px; color: #9aa3c7;
+    display: flex; justify-content: space-between; gap: 12px;
+  }
+  .overlay {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+    background: rgba(6, 8, 20, 0.72);
+    padding: 24px;
+  }
+  .overlay.hidden { display: none; }
+  .overlay h1 { margin: 0 0 8px; font-size: 52px; letter-spacing: 6px; color: #e8b64c; }
+  .overlay h2 { margin: 0 0 10px; font-size: 40px; letter-spacing: 4px; color: #ff8a80; }
+  .overlay h2.win { color: #cfe8ff; }
+  .overlay p { margin: 6px 0; font-size: 17px; line-height: 1.5; max-width: 640px; }
+  .overlay .keys { font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #9aa3c7; }
+  .overlay button {
+    margin-top: 18px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 18px; font-weight: bold;
+    color: #0a0c16; background: #e8b64c;
+    border: none; border-radius: 6px;
+    padding: 12px 28px; cursor: pointer;
+  }
+  .overlay button:hover { background: #f5c95e; }
+</style>
+</head>
+<body>
+  <div id="hud">
+    <span class="title">THE MOON PEARL</span>
+    <span class="level">Manor Garden, midnight</span>
+    <span id="hud-pearls">Pearls ○ ○ ○ 0/3</span>
+    <span id="hud-alert" class="calm">CALM</span>
+    <span id="hud-timer">0:00</span>
+    <span id="hud-hint"></span>
+  </div>
+  <div id="stage">
+    <canvas id="game" width="1280" height="704" tabindex="0"></canvas>
+    <div id="title-screen" class="overlay">
+      <h1>THE MOON PEARL</h1>
+      <p>Three moon pearls sleep in the manor garden, and four watchmen walk its paths.
+         Slip past their lantern light, steal every pearl, and reach the golden gate unseen.</p>
+      <p class="keys">Move: WASD or arrow keys &nbsp;·&nbsp; Sneak: hold Shift (slower, quieter, harder to spot)
+         &nbsp;·&nbsp; Click the garden to walk there &nbsp;·&nbsp; R: restart</p>
+      <p class="keys">Lamplight makes you easy to spot. Shadow hides you. A guard who half-sees you
+         stops and looks — break sight before the ring fills, or he will give chase.</p>
+      <button id="start-button" type="button">Begin the theft</button>
+    </div>
+    <div id="caught-screen" class="overlay hidden">
+      <h2>CAUGHT!</h2>
+      <p id="caught-text"></p>
+      <p class="keys">Press R or click below to try again.</p>
+      <button id="retry-button" type="button">Try again</button>
+    </div>
+    <div id="win-screen" class="overlay hidden">
+      <h2 class="win">THE MOON PEARLS ARE YOURS</h2>
+      <p id="win-text"></p>
+      <p class="keys">Press R or click below to steal them once more.</p>
+      <button id="again-button" type="button">Steal again</button>
+    </div>
+  </div>
+  <div id="footer">
+    <span>Stay out of the yellow cones. Hedges, crates and walls block a guard's sight.</span>
+    <span>An original game — art, sound and level made for this bounty.</span>
+  </div>
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>
