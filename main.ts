@@ -33,8 +33,10 @@ function countEntries(dir) {
   return { files, bytes };
 }
 
-rmSync(outDir, { recursive: true, force: true });
 mkdirSync(outDir, { recursive: true });
+for (const name of ['game', 'screenshots', 'dossier.json']) {
+  rmSync(join(outDir, name), { recursive: true, force: true });
+}
 cpSync(join(repoRoot, 'game'), join(outDir, 'game'), { recursive: true });
 cpSync(join(repoRoot, 'screenshots'), join(outDir, 'screenshots'), { recursive: true });
 
